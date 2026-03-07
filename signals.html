@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0a1628"/>
+  <title>Trading Signals - Aniya AI</title>
+  <link rel="icon" type="image/webp" href="images/Anya_Forger_Anime.webp"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <main class="main-page" id="signals-page" style="display:none;">
+
+    <!-- Background Effects -->
+    <div class="bg-effects">
+      <div class="bg-blob blob-1"></div>
+      <div class="bg-blob blob-2"></div>
+      <div class="bg-blob blob-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container nav-container">
+        <div class="nav-inner">
+          <a href="/" class="nav-logo">
+            <img src="images/Anya_Forger_Anime.webp" alt="Aniya AI Logo" class="logo-img"/>
+            <span class="logo-text">Aniya AI</span>
+          </a>
+          <a href="/" class="launch-btn">Home</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Signals Content -->
+    <div class="content-wrapper">
+      <div style="max-width:720px; margin:0 auto; text-align:center; padding: 4rem 1rem;">
+        <h1 style="font-size:2.5rem; font-weight:700; color:#fff; margin-bottom:1rem;">
+          <span class="gradient-text font-gothic">Trading Signals</span>
+        </h1>
+        <p style="font-size:1.1rem; color:rgba(255,255,255,0.7); margin-bottom:2rem;">
+          Follow Aniya AI signals to maximize your trading profits. This page is coming soon.
+        </p>
+        <div style="padding:3rem 2rem; border-radius:1.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1.5rem;">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+            <polyline points="16 7 22 7 22 13"/>
+          </svg>
+          <h2 style="font-size:1.5rem; color:#fff; margin-bottom:0.75rem;">Signal Board Coming Soon</h2>
+          <p style="color:rgba(255,255,255,0.5); font-size:0.95rem;">
+            The live trading signal board is under development. Stay tuned!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 Aniya AI. All rights reserved.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    (async function checkSession() {
+      const accountId = localStorage.getItem('aniya_account_id');
+      const sessionToken = localStorage.getItem('aniya_session_token');
+
+      // No credentials at all — redirect immediately
+      if (!accountId || !sessionToken) {
+        window.location.replace('./activation-sufia-ai.html');
+        return;
+      }
+
+      // Credentials exist — show page immediately (optimistic)
+      document.getElementById('signals-page').style.display = '';
+
+      // Then validate in background
+      try {
+        const res = await fetch('https://aniya.pythonanywhere.com/api/validate-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ account_id: accountId, session_token: sessionToken })
+        });
+        const data = await res.json();
+        if (!data.valid) {
+          localStorage.removeItem('aniya_account_id');
+          localStorage.removeItem('aniya_session_token');
+          alert(data.message || 'Session expired. Please login again.');
+          window.location.replace('./activation-sufia-ai.html');
+        }
+      } catch (e) {
+        // Server unreachable — keep page visible (already logged in locally)
+      }
+    })();
+  </script>
+
+</body>
+</html>
