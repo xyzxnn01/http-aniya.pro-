@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0a1628"/>
+  <title>Aniya AI</title>
+  <link rel="icon" type="image/webp" href="images/Anya_Forger_Anime.webp"/>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="description" content="Sci-fi AI web app that searches the live web and responds using text and voice"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <main id="loading-screen" class="loading-screen">
+    <div class="loading-content">
+      <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+      </svg>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </main>
+
+  <!-- Main Page -->
+  <main id="main-page" class="main-page" style="display:none;">
+
+    <!-- Background Effects -->
+    <div class="bg-effects">
+      <div class="bg-blob blob-1"></div>
+      <div class="bg-blob blob-2"></div>
+      <div class="bg-blob blob-3"></div>
+      <div class="bg-blob blob-4"></div>
+      <div class="bg-blob blob-5"></div>
+      <div class="bg-blob blob-bounce-1"></div>
+      <div class="bg-blob blob-bounce-2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container nav-container">
+        <div class="nav-inner">
+          <a href="/" class="nav-logo">
+            <img src="images/Anya_Forger_Anime.webp" alt="Aniya ai Logo" class="logo-img"/>
+            <span class="logo-text">Aniya ai</span>
+          </a>
+          <a href="./activation-aniya-ai" class="launch-btn" id="install-btn">Launch App</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="content-wrapper">
+      <section class="hero-section">
+        <div class="hero-left">
+          <div class="hero-badge animate-fade-in-top">
+            <svg class="badge-icon spin-slow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+              <path d="M20 3v4"/><path d="M22 5h-4"/>
+              <path d="M4 17v2"/><path d="M5 18H3"/>
+            </svg>
+            <span>AI-Powered Trading Assistant</span>
+          </div>
+
+          <h1 class="hero-title animate-fade-in-bottom">
+            <span class="typing-wrapper">
+              <span id="typing-text"></span>
+              <span class="cursor-blink"></span>
+            </span>
+            <br/>
+            <span class="gradient-text font-gothic">Aniya ai</span>
+          </h1>
+
+          <p class="hero-description animate-fade-in-bottom delay-300">
+            Your intelligent trading companion. Get real-time market insights, automated trading signals, and voice-powered analysis.
+          </p>
+
+          <div class="hero-cta animate-fade-in-bottom delay-500">
+            <a href="./activation-aniya-ai" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/>
+              </svg>
+              Activate Account
+              <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-right animate-fade-in-right delay-500">
+          <div class="hero-image-wrapper">
+            <div class="hero-image-glow"></div>
+            <img src="images/aniya-main.png" alt="Aniya ai Robot Assistant" class="hero-image"/>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Cards -->
+      <section class="features-grid">
+        <div class="feature-card animate-fade-in-bottom delay-700">
+          <div class="feature-icon-box">
+            <svg class="feature-icon pulse" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Voice AI Trading</h3>
+          <p class="feature-desc">Interact with SUFIA using voice commands. Get instant market analysis and trading insights hands-free.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in-bottom delay-800">
+          <div class="feature-icon-box">
+            <svg class="feature-icon bounce-slow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+              <polyline points="16 7 22 7 22 13"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Auto Trading Signals</h3>
+          <p class="feature-desc">Let SUFIA analyze market trends and provide automated trading signals for Quotex platform.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in-bottom delay-900">
+          <div class="feature-icon-box">
+            <svg class="feature-icon spin-medium" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+              <path d="M2 12h20"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Auto Trade Place</h3>
+          <p class="feature-desc">Aniya ai will automatically place trades on Quotex while you stay on our website - interacting with you live through voice commands in real-time.</p>
+        </div>
+      </section>
+
+      <!-- Demo Section -->
+      <section class="demo-section">
+        <div class="section-header">
+          <h2 class="section-title">See <span class="gradient-text font-gothic">Aniya ai</span> in Action</h2>
+          <p class="section-subtitle">Watch how Aniya ai revolutionizes your trading experience with automated signals and live trade execution.</p>
+        </div>
+
+        <div class="demo-grid">
+          <div class="demo-card">
+            <div class="demo-card-header">
+              <div class="demo-icon-box">
+                <svg class="demo-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                  <polyline points="16 7 22 7 22 13"/>
+                </svg>
+              </div>
+              <h3 class="demo-title">Auto Trading Signal Demo</h3>
+            </div>
+            <p class="demo-desc">Watch Aniya ai analyze market trends and generate accurate trading signals in real-time.</p>
+            <div class="demo-video-placeholder">
+              <div class="demo-video-overlay"></div>
+              <div class="play-button">
+                <svg width="40" height="40" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <span class="demo-video-text">Demo Video Coming Soon</span>
+            </div>
+          </div>
+
+          <div class="demo-card">
+            <div class="demo-card-header">
+              <div class="demo-icon-box">
+                <svg class="demo-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+                </svg>
+              </div>
+              <h3 class="demo-title">Auto Trade Place Demo</h3>
+            </div>
+            <p class="demo-desc">See how Aniya ai automatically executes trades on Quotex with live voice interaction.</p>
+            <div class="demo-video-placeholder">
+              <div class="demo-video-overlay"></div>
+              <div class="play-button">
+                <svg width="40" height="40" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <span class="demo-video-text">Demo Video Coming Soon</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="stats-section">
+        <h2 class="section-title">Trusted by Traders Worldwide</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number pulse">10K+</div>
+            <div class="stat-label">Active Users</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number pulse delay-200">99.9%</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number pulse delay-400">24/7</div>
+            <div class="stat-label">AI Support</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Owner Section -->
+      <section class="owner-section">
+        <div class="owner-card">
+          <h2 class="section-title">
+            <span class="gradient-text font-gothic">Aniya ai</span> Owner
+          </h2>
+          <div class="owner-content">
+            <div class="owner-avatar-wrapper">
+              <div class="owner-avatar">
+                <img src="images/jisanx.jpg" alt="Jisan X - Aniya ai Owner"/>
+              </div>
+              <div class="owner-avatar-glow"></div>
+            </div>
+            <div class="owner-info">
+              <h3 class="owner-name font-gothic">Jisan X</h3>
+              <div class="owner-badges">
+                <div class="owner-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/>
+                    <circle cx="12" cy="8" r="6"/>
+                  </svg>
+                  <span>Owner of SingleBotMaker</span>
+                </div>
+                <div class="owner-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>Trading Experience: 5+ Years</span>
+                </div>
+              </div>
+            </div>
+            <div class="owner-bio">
+              <p>Jisan X is a visionary entrepreneur and seasoned trader with over 5 years of experience in the financial markets. As the founder of <span class="highlight">SingleBotMaker</span>, he has helped thousands of traders achieve consistent profits through his expert guidance and innovative trading strategies.</p>
+              <p>Driven by a passion for technology and trading, Jisan X created <span class="highlight font-gothic">Aniya ai</span> to revolutionize the way traders interact with the market. His vision was to build an AI assistant that combines advanced market analysis with voice-powered interaction, making professional trading accessible to everyone.</p>
+              <p>Under his leadership, Aniya ai has grown into a trusted platform used by traders worldwide. Jisan X continues to innovate and expand the capabilities of Aniya ai, ensuring that users always have access to cutting-edge trading tools and real-time market intelligence.</p>
+            </div>
+            <div class="owner-stats">
+              <div class="owner-stat">
+                <div class="owner-stat-number">5+</div>
+                <div class="owner-stat-label">Years Trading</div>
+              </div>
+              <div class="owner-stat">
+                <div class="owner-stat-number">10K+</div>
+                <div class="owner-stat-label">Traders Helped</div>
+              </div>
+              <div class="owner-stat">
+                <div class="owner-stat-number">50M+</div>
+                <div class="owner-stat-label">Profits Generated</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <h2 class="cta-title">Ready to Start Trading with AI?</h2>
+        <p class="cta-desc">Join thousands of traders using Aniya ai for smarter trading decisions.</p>
+        <div class="cta-buttons">
+          <a href="./activation-aniya-ai" class="btn-primary btn-lg">
+            Launch Aniya ai
+            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </a>
+          <a href="https://t.me/SingleBotMaker" target="_blank" rel="noopener noreferrer" class="btn-telegram btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            Join Our Telegram Channel
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2025 Aniya ai. All rights reserved.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
