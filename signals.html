@@ -10,8 +10,569 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* Signal Page Specific Styles */
+    .signal-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .signal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .signal-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-header p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Upload Section */
+    .upload-section {
+      background: linear-gradient(135deg, rgba(26, 15, 53, 0.9), rgba(10, 5, 32, 0.95));
+      border-radius: 1.5rem;
+      border: 1px solid rgba(244, 114, 182, 0.2);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(244, 114, 182, 0.4);
+      border-radius: 1rem;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(244, 114, 182, 0.05);
+      position: relative;
+    }
+
+    .upload-area:hover {
+      border-color: rgba(244, 114, 182, 0.7);
+      background: rgba(244, 114, 182, 0.1);
+    }
+
+    .upload-area.dragover {
+      border-color: #f472b6;
+      background: rgba(244, 114, 182, 0.15);
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      color: #f472b6;
+    }
+
+    .upload-text {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-hint {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
+
+    #screenshotInput {
+      display: none;
+    }
+
+    /* Preview Image */
+    .preview-container {
+      display: none;
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .preview-container.active {
+      display: block;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 0.75rem;
+      margin: 0 auto;
+      display: block;
+      border: 2px solid rgba(244, 114, 182, 0.3);
+    }
+
+    .remove-preview {
+      position: absolute;
+      top: -10px;
+      right: calc(50% - 160px);
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .remove-preview:hover {
+      transform: scale(1.1);
+    }
+
+    /* Time Selection */
+    .time-section {
+      margin-top: 1.5rem;
+    }
+
+    .time-label {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .time-label svg {
+      width: 18px;
+      height: 18px;
+      color: #f472b6;
+    }
+
+    .time-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .time-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .time-btn:hover {
+      background: rgba(244, 114, 182, 0.2);
+      border-color: rgba(244, 114, 182, 0.5);
+    }
+
+    .time-btn.active {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      border-color: transparent;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Analyze Button */
+    .analyze-btn {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .analyze-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    .analyze-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .analyze-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Result Section */
+    .result-section {
+      display: none;
+      background: linear-gradient(135deg, rgba(26, 15, 53, 0.95), rgba(10, 5, 32, 0.98));
+      border-radius: 1.5rem;
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      padding: 2rem;
+      margin-top: 1.5rem;
+      animation: fadeInFromBottom 0.5s ease;
+    }
+
+    .result-section.active {
+      display: block;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-header h3 {
+      color: #fff;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Direction Display */
+    .direction-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .direction-card {
+      padding: 1.5rem 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .direction-card.up {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.3));
+      border: 2px solid rgba(34, 197, 94, 0.5);
+    }
+
+    .direction-card.down {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3));
+      border: 2px solid rgba(239, 68, 68, 0.5);
+    }
+
+    .direction-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.5rem;
+    }
+
+    .direction-card.up .direction-icon {
+      color: #22c55e;
+    }
+
+    .direction-card.down .direction-icon {
+      color: #ef4444;
+    }
+
+    .direction-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .direction-card.up .direction-text {
+      color: #22c55e;
+    }
+
+    .direction-card.down .direction-text {
+      color: #ef4444;
+    }
+
+    /* Percentage Display */
+    .percentage-display {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .percentage-value {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f472b6, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .percentage-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+    }
+
+    /* Reason Section */
+    .reason-section {
+      background: rgba(0,0,0,0.3);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      border-left: 3px solid #f472b6;
+    }
+
+    .reason-title {
+      color: #f472b6;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .reason-title svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .reason-text {
+      color: rgba(255,255,255,0.85);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Loading State */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 5, 32, 0.9);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(244, 114, 182, 0.2);
+      border-top-color: #f472b6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    /* Balance Popup */
+    .balance-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 5, 32, 0.95);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .balance-popup-overlay.active {
+      display: flex;
+    }
+
+    .balance-popup {
+      background: linear-gradient(135deg, rgba(26, 15, 53, 0.98), rgba(10, 5, 32, 0.99));
+      border-radius: 1.5rem;
+      border: 2px solid rgba(239, 68, 68, 0.5);
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeInFromBottom 0.4s ease;
+    }
+
+    .balance-popup-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      color: #ef4444;
+      animation: pulse 2s infinite;
+    }
+
+    .balance-popup h2 {
+      color: #ef4444;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .balance-popup p {
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .country-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 1.5rem;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+    }
+
+    .country-badge svg {
+      width: 18px;
+      height: 18px;
+      color: #f472b6;
+    }
+
+    .deposit-btn {
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      margin-right: 0.5rem;
+    }
+
+    .deposit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+    }
+
+    .close-popup-btn {
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.75rem;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .close-popup-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f472b6;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.25rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .signal-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .upload-section, .result-section {
+        padding: 1.25rem;
+      }
+
+      .direction-display {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .direction-card {
+        width: 100%;
+      }
+
+      .percentage-value {
+        font-size: 2.5rem;
+      }
+
+      .balance-popup {
+        padding: 1.5rem;
+      }
+
+      .stats-bar {
+        gap: 0.75rem;
+      }
+
+      .stat-item {
+        min-width: 100px;
+        padding: 0.5rem 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Balance Zero Popup -->
+  <div class="balance-popup-overlay" id="balancePopup">
+    <div class="balance-popup">
+      <svg class="balance-popup-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <h2>Your Balance is Zero!</h2>
+      <p>You need to deposit funds to use the Aniya AI Trading Signal Bot. Please add balance to your account to continue.</p>
+      <div class="country-badge" id="countryBadge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span id="countryName">Loading...</span>
+      </div>
+      <div>
+        <button class="deposit-btn" onclick="goToDeposit()">Deposit Now</button>
+        <button class="close-popup-btn" onclick="closeBalancePopup()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Analyzing chart pattern...<br/>Please wait</div>
+  </div>
 
   <main class="main-page" id="signals-page" style="display:none;">
 
@@ -37,66 +598,411 @@
     </nav>
 
     <!-- Signals Content -->
-    <div class="content-wrapper">
-      <div style="max-width:720px; margin:0 auto; text-align:center; padding: 4rem 1rem;">
-        <h1 style="font-size:2.5rem; font-weight:700; color:#fff; margin-bottom:1rem;">
-          <span class="gradient-text font-gothic">Trading Signals</span>
-        </h1>
-        <p style="font-size:1.1rem; color:rgba(255,255,255,0.7); margin-bottom:2rem;">
-          Follow Aniya AI signals to maximize your trading profits. This page is coming soon.
-        </p>
-        <div style="padding:3rem 2rem; border-radius:1.5rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1.5rem;">
-            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
-            <polyline points="16 7 22 7 22 13"/>
+    <div class="signal-container">
+      <div class="signal-header">
+        <h1><span class="gradient-text font-gothic">AI Trading Signals</span></h1>
+        <p>Upload your chart screenshot and let Aniya AI predict the next candle</p>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value" id="userBalance">$0.00</div>
+          <div class="stat-label">Balance</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="signalCount">0</div>
+          <div class="stat-label">Signals Today</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="accuracyRate">85%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('screenshotInput').click()">
+          <input type="file" id="screenshotInput" accept="image/*"/>
+          <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
-          <h2 style="font-size:1.5rem; color:#fff; margin-bottom:0.75rem;">Signal Board Coming Soon</h2>
-          <p style="color:rgba(255,255,255,0.5); font-size:0.95rem;">
-            The live trading signal board is under development. Stay tuned!
-          </p>
+          <div class="upload-text">Upload Chart Screenshot</div>
+          <div class="upload-hint">Click or drag & drop your trading chart image</div>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+          <button class="remove-preview" onclick="removePreview()">×</button>
+          <img id="previewImage" class="preview-image" src="" alt="Preview"/>
+        </div>
+
+        <!-- Time Selection -->
+        <div class="time-section">
+          <div class="time-label">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Select Trade Time:
+          </div>
+          <div class="time-buttons">
+            <button class="time-btn" data-time="5">5 Sec</button>
+            <button class="time-btn" data-time="15">15 Sec</button>
+            <button class="time-btn" data-time="30">30 Sec</button>
+            <button class="time-btn active" data-time="60">1 Min</button>
+            <button class="time-btn" data-time="120">2 Min</button>
+            <button class="time-btn" data-time="180">3 Min</button>
+            <button class="time-btn" data-time="300">5 Min</button>
+            <button class="time-btn" data-time="600">10 Min</button>
+            <button class="time-btn" data-time="900">15 Min</button>
+          </div>
+        </div>
+
+        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeChart()" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Analyze & Get Signal
+        </button>
+      </div>
+
+      <!-- Result Section -->
+      <div class="result-section" id="resultSection">
+        <div class="result-header">
+          <h3>AI Signal Prediction</h3>
+        </div>
+
+        <div class="direction-display">
+          <div class="direction-card" id="directionCard">
+            <svg class="direction-icon" id="directionIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Icon will be updated via JS -->
+            </svg>
+            <div class="direction-text" id="directionText">UP</div>
+            <div style="color:rgba(255,255,255,0.5); font-size:0.8rem;" id="timeframeText">Next 1 Min</div>
+          </div>
+        </div>
+
+        <div class="percentage-display">
+          <div class="percentage-value" id="percentageValue">85%</div>
+          <div class="percentage-label">Confidence Level</div>
+        </div>
+
+        <div class="reason-section">
+          <div class="reason-title">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            Analysis Reason
+          </div>
+          <div class="reason-text" id="reasonText">
+            Loading analysis...
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" style="text-align:center; padding:2rem 1rem; color:rgba(255,255,255,0.4); font-size:0.85rem;">
       <p>&copy; 2026 Aniya AI. All rights reserved.</p>
     </footer>
 
   </main>
 
   <script>
-    (async function checkSession() {
-      const accountId = localStorage.getItem('aniya_account_id');
-      const sessionToken = localStorage.getItem('aniya_session_token');
+    // Configuration - API is now server-side
+    const SERVER_URL = 'https://aniya.pythonanywhere.com';
 
-      // No credentials at all — redirect immediately
+    // Global State
+    let selectedTime = 60;
+    let userCountry = 'Unknown';
+    let userLanguage = 'en';
+    let userBalance = 0;
+    let uploadedImageBase64 = null;
+    let accountId = '';
+    let sessionToken = '';
+
+    // Language mapping by country
+    const countryLanguages = {
+      'Bangladesh': { lang: 'bn', name: 'বাংলা' },
+      'India': { lang: 'hi', name: 'हिंदी' },
+      'Pakistan': { lang: 'ur', name: 'اردو' },
+      'Indonesia': { lang: 'id', name: 'Bahasa Indonesia' },
+      'Vietnam': { lang: 'vi', name: 'Tiếng Việt' },
+      'Thailand': { lang: 'th', name: 'ไทย' },
+      'Philippines': { lang: 'tl', name: 'Filipino' },
+      'Malaysia': { lang: 'ms', name: 'Bahasa Melayu' },
+      'Brazil': { lang: 'pt', name: 'Português' },
+      'Russia': { lang: 'ru', name: 'Русский' },
+      'China': { lang: 'zh', name: '中文' },
+      'Japan': { lang: 'ja', name: '日本語' },
+      'Korea': { lang: 'ko', name: '한국어' },
+      'Saudi Arabia': { lang: 'ar', name: 'العربية' },
+      'United Arab Emirates': { lang: 'ar', name: 'العربية' },
+      'Turkey': { lang: 'tr', name: 'Türkçe' },
+      'France': { lang: 'fr', name: 'Français' },
+      'Germany': { lang: 'de', name: 'Deutsch' },
+      'Spain': { lang: 'es', name: 'Español' },
+      'Italy': { lang: 'it', name: 'Italiano' }
+    };
+
+    // Initialize
+    (async function init() {
+      accountId = localStorage.getItem('aniya_account_id');
+      sessionToken = localStorage.getItem('aniya_session_token');
+
       if (!accountId || !sessionToken) {
         window.location.replace('./activation-aniya-ai');
         return;
       }
 
-      // Credentials exist — show page immediately (optimistic)
       document.getElementById('signals-page').style.display = '';
 
-      // Then validate in background
+      // Validate session and get user data
       try {
-        const res = await fetch('https://aniya.pythonanywhere.com/api/validate-session', {
+        const res = await fetch(SERVER_URL + '/api/validate-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ account_id: accountId, session_token: sessionToken })
         });
         const data = await res.json();
+
         if (!data.valid) {
           localStorage.removeItem('aniya_account_id');
           localStorage.removeItem('aniya_session_token');
           alert(data.message || 'Session expired. Please login again.');
           window.location.replace('./activation-aniya-ai');
+          return;
+        }
+
+        // Get user data
+        if (data.user) {
+          // Parse balance (remove $ and parse as float)
+          const balanceStr = (data.user.balance || '0').replace(/[^0-9.]/g, '');
+          userBalance = parseFloat(balanceStr) || 0;
+          userCountry = data.user.country || 'Unknown';
+          
+          document.getElementById('userBalance').textContent = '$' + userBalance.toFixed(2);
+          document.getElementById('countryName').textContent = userCountry;
+
+          // Set language based on country
+          if (countryLanguages[userCountry]) {
+            userLanguage = countryLanguages[userCountry].lang;
+          }
+
+          // Check if balance is zero
+          if (userBalance <= 0) {
+            showBalancePopup();
+          }
         }
       } catch (e) {
-        // Server unreachable — keep page visible (already logged in locally)
+        console.error('Session validation error:', e);
+        // Get country from IP as fallback
+        await detectCountry();
       }
+
+      setupEventListeners();
     })();
+
+    // Detect country from IP
+    async function detectCountry() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        userCountry = data.country_name || 'Unknown';
+        document.getElementById('countryName').textContent = userCountry;
+        
+        if (countryLanguages[userCountry]) {
+          userLanguage = countryLanguages[userCountry].lang;
+        }
+      } catch (e) {
+        console.error('Country detection error:', e);
+      }
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // File input
+      const fileInput = document.getElementById('screenshotInput');
+      fileInput.addEventListener('change', handleFileSelect);
+
+      // Drag and drop
+      const uploadArea = document.getElementById('uploadArea');
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      // Time buttons
+      document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedTime = parseInt(btn.dataset.time);
+        });
+      });
+    }
+
+    // Handle file selection
+    function handleFileSelect(e) {
+      if (e.target.files.length) {
+        handleFile(e.target.files[0]);
+      }
+    }
+
+    // Handle file processing
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedImageBase64 = e.target.result;
+        document.getElementById('previewImage').src = uploadedImageBase64;
+        document.getElementById('previewContainer').classList.add('active');
+        document.getElementById('analyzeBtn').disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Remove preview
+    function removePreview() {
+      uploadedImageBase64 = null;
+      document.getElementById('previewImage').src = '';
+      document.getElementById('previewContainer').classList.remove('active');
+      document.getElementById('analyzeBtn').disabled = true;
+      document.getElementById('screenshotInput').value = '';
+    }
+
+    // Show balance popup
+    function showBalancePopup() {
+      document.getElementById('balancePopup').classList.add('active');
+    }
+
+    // Close balance popup
+    function closeBalancePopup() {
+      document.getElementById('balancePopup').classList.remove('active');
+    }
+
+    // Go to deposit
+    function goToDeposit() {
+      window.location.href = './'; // Redirect to home/deposit page
+    }
+
+    // Get time label
+    function getTimeLabel(seconds) {
+      if (seconds < 60) return seconds + ' Seconds';
+      return (seconds / 60) + ' Minute' + (seconds >= 120 ? 's' : '');
+    }
+
+    // Analyze chart
+    async function analyzeChart() {
+      if (!uploadedImageBase64) {
+        alert('Please upload a chart screenshot first');
+        return;
+      }
+
+      // Check balance again
+      if (userBalance <= 0) {
+        showBalancePopup();
+        return;
+      }
+
+      // Show loading
+      document.getElementById('loadingOverlay').classList.add('active');
+      document.getElementById('resultSection').classList.remove('active');
+
+      try {
+        const timeLabel = getTimeLabel(selectedTime);
+        
+        // Call server-side AI analysis endpoint
+        const response = await fetch(SERVER_URL + '/api/signals/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            account_id: accountId,
+            session_token: sessionToken,
+            image: uploadedImageBase64,
+            time: selectedTime,
+            language: userLanguage
+          })
+        });
+
+        const data = await response.json();
+        
+        if (!data.success) {
+          if (data.balance_zero) {
+            showBalancePopup();
+            return;
+          }
+          throw new Error(data.message || 'Analysis failed');
+        }
+
+        const result = data.result;
+
+        // Display results
+        displayResult(result, timeLabel);
+
+        // Update signal count
+        const currentCount = parseInt(document.getElementById('signalCount').textContent) || 0;
+        document.getElementById('signalCount').textContent = currentCount + 1;
+
+      } catch (error) {
+        console.error('Analysis error:', error);
+        alert('Error analyzing chart: ' + error.message);
+      } finally {
+        document.getElementById('loadingOverlay').classList.remove('active');
+      }
+    }
+
+    // Display result
+    function displayResult(result, timeLabel) {
+      const isUp = result.direction.toUpperCase() === 'UP';
+      
+      // Update direction card
+      const directionCard = document.getElementById('directionCard');
+      directionCard.className = 'direction-card ' + (isUp ? 'up' : 'down');
+      
+      // Update direction icon
+      const iconSvg = isUp ? 
+        '<polyline points="18 15 12 9 6 15"/>' : 
+        '<polyline points="6 9 12 15 18 9"/>';
+      document.getElementById('directionIcon').innerHTML = iconSvg;
+      
+      // Update direction text
+      document.getElementById('directionText').textContent = isUp ? 'UP' : 'DOWN';
+      document.getElementById('timeframeText').textContent = 'Next ' + timeLabel;
+      
+      // Update percentage
+      document.getElementById('percentageValue').textContent = result.confidence + '%';
+      
+      // Update reason
+      document.getElementById('reasonText').textContent = result.reason;
+      
+      // Show result section
+      document.getElementById('resultSection').classList.add('active');
+      
+      // Scroll to result
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 
 </body>
