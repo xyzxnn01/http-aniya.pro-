@@ -445,6 +445,14 @@
       animation: pulse 2s infinite;
     }
 
+    .balance-popup-icon.warning-icon {
+      color: #f97316;
+    }
+
+    .invalid-chart-popup h2 {
+      color: #f97316 !important;
+    }
+
     .balance-popup h2 {
       color: #ef4444;
       font-size: 1.5rem;
@@ -600,6 +608,23 @@
       <div>
         <button class="deposit-btn" onclick="goToDeposit()">Deposit Now</button>
         <button class="close-popup-btn" onclick="closeBalancePopup()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invalid Chart Popup -->
+  <div class="balance-popup-overlay" id="invalidChartPopup">
+    <div class="balance-popup invalid-chart-popup">
+      <svg class="balance-popup-icon warning-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <h2>ট্রেডিং চার্ট নয়!</h2>
+      <p id="invalidChartMessage">এটি একটি ট্রেডিং চার্ট নয়। আমি শুধুমাত্র ট্রেডিং চার্ট বিশ্লেষণ করে সিগনাল দিতে পারি।</p>
+      <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-top: 1rem;">Pocket Option, Quotex, বা অন্য ট্রেডিং প্ল্যাটফর্ম থেকে চার্টের স্ক্রিনশট আপলোড করুন।</p>
+      <div>
+        <button class="close-popup-btn" onclick="closeInvalidChartPopup()" style="background: linear-gradient(135deg, #f97316, #ea580c);">ঠিক আছে</button>
       </div>
     </div>
   </div>
@@ -945,6 +970,18 @@
       document.getElementById('balancePopup').classList.add('active');
     }
 
+    // Show invalid chart message
+    function showInvalidChartMessage(message) {
+      const popup = document.getElementById('invalidChartPopup');
+      document.getElementById('invalidChartMessage').textContent = message || 'এটি একটি ট্রেডিং চার্ট নয়। অনুগ্রহ করে সঠিক চার্ট আপলোড করুন।';
+      popup.classList.add('active');
+    }
+
+    // Close invalid chart popup
+    function closeInvalidChartPopup() {
+      document.getElementById('invalidChartPopup').classList.remove('active');
+    }
+
     // Close balance popup
     function closeBalancePopup() {
       document.getElementById('balancePopup').classList.remove('active');
@@ -1001,6 +1038,11 @@
         if (!data.success) {
           if (data.balance_zero) {
             showBalancePopup();
+            return;
+          }
+          if (data.invalid_chart) {
+            // Show invalid chart message
+            showInvalidChartMessage(data.message);
             return;
           }
           throw new Error(data.message || 'Analysis failed');
