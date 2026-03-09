@@ -722,6 +722,7 @@
     let userCountry = 'Unknown';
     let userLanguage = 'en';
     let userBalance = 0;
+    let isHonorActive = false;
     let uploadedImageBase64 = null;
     let accountId = '';
     let sessionToken = '';
@@ -785,17 +786,23 @@
           const balanceStr = (data.user.balance || '0').replace(/[^0-9.]/g, '');
           userBalance = parseFloat(balanceStr) || 0;
           userCountry = data.user.country || 'Unknown';
+          isHonorActive = data.user.honor_active || false;
           
           document.getElementById('userBalance').textContent = '$' + userBalance.toFixed(2);
           document.getElementById('countryName').textContent = userCountry;
+
+          // Show VIP badge if honor_active
+          if (isHonorActive) {
+            document.getElementById('userBalance').innerHTML = '$' + userBalance.toFixed(2) + ' <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:0.65rem;padding:2px 6px;border-radius:999px;margin-left:4px;">⭐ VIP</span>';
+          }
 
           // Set language based on country
           if (countryLanguages[userCountry]) {
             userLanguage = countryLanguages[userCountry].lang;
           }
 
-          // Check if balance is zero
-          if (userBalance <= 0) {
+          // Check if balance is zero (skip if honor_active)
+          if (userBalance <= 0 && !isHonorActive) {
             showBalancePopup();
           }
         }
@@ -918,8 +925,8 @@
         return;
       }
 
-      // Check balance again
-      if (userBalance <= 0) {
+      // Check balance again (skip if honor_active)
+      if (userBalance <= 0 && !isHonorActive) {
         showBalancePopup();
         return;
       }
