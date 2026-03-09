@@ -265,6 +265,11 @@
       border: 2px solid rgba(239, 68, 68, 0.5);
     }
 
+    .direction-card.error {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(234, 88, 12, 0.3));
+      border: 2px solid rgba(249, 115, 22, 0.5);
+    }
+
     .direction-icon {
       width: 48px;
       height: 48px;
@@ -277,6 +282,14 @@
 
     .direction-card.down .direction-icon {
       color: #ef4444;
+    }
+
+    .direction-card.error .direction-icon {
+      color: #f97316;
+    }
+
+    .direction-card.error .direction-text {
+      color: #f97316;
     }
 
     .direction-text {
@@ -1041,8 +1054,8 @@
             return;
           }
           if (data.invalid_chart) {
-            // Show invalid chart message
-            showInvalidChartMessage(data.message);
+            // Show error in result section (not popup) with AI's message
+            displayError(data.message);
             return;
           }
           throw new Error(data.message || 'Analysis failed');
@@ -1090,6 +1103,38 @@
       document.getElementById('reasonText').textContent = result.reason;
       
       // Stop any playing speech when new result comes
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        document.getElementById('voiceBtn').classList.remove('playing');
+      }
+      
+      // Show result section
+      document.getElementById('resultSection').classList.add('active');
+      
+      // Scroll to result
+      document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Display error when invalid chart uploaded
+    function displayError(errorMessage) {
+      // Update direction card to error state
+      const directionCard = document.getElementById('directionCard');
+      directionCard.className = 'direction-card error';
+      
+      // Update direction icon to X (error)
+      document.getElementById('directionIcon').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+      
+      // Update direction text
+      document.getElementById('directionText').textContent = 'ERROR';
+      document.getElementById('timeframeText').textContent = 'ট্রেডিং চার্ট নয়';
+      
+      // Update percentage to show error
+      document.getElementById('percentageValue').textContent = '—';
+      
+      // Update reason with AI's error message
+      document.getElementById('reasonText').textContent = errorMessage;
+      
+      // Stop any playing speech
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         document.getElementById('voiceBtn').classList.remove('playing');
