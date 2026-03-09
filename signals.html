@@ -336,6 +336,42 @@
       height: 16px;
     }
 
+    .voice-btn {
+      margin-left: auto;
+      background: rgba(244, 114, 182, 0.2);
+      border: 1px solid rgba(244, 114, 182, 0.4);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #f472b6;
+    }
+    .voice-btn:hover {
+      background: rgba(244, 114, 182, 0.4);
+      transform: scale(1.1);
+    }
+    .voice-btn:active {
+      transform: scale(0.95);
+    }
+    .voice-btn.playing {
+      background: rgba(34, 197, 94, 0.3);
+      border-color: rgba(34, 197, 94, 0.5);
+      color: #4ade80;
+      animation: pulse-voice 1s infinite;
+    }
+    @keyframes pulse-voice {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+    }
+    .voice-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
     .reason-text {
       color: rgba(255,255,255,0.85);
       font-size: 0.95rem;
@@ -697,10 +733,17 @@
               <line x1="12" y1="16" x2="12" y2="12"/>
               <line x1="12" y1="8" x2="12.01" y2="8"/>
             </svg>
-            Analysis Reason
+            বিশ্লেষণের কারণ
+            <button class="voice-btn" id="voiceBtn" onclick="speakReason()" title="শুনুন">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="voiceIcon">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+            </button>
           </div>
           <div class="reason-text" id="reasonText">
-            Loading analysis...
+            বিশ্লেষণ লোড হচ্ছে...
           </div>
         </div>
       </div>
@@ -1004,11 +1047,74 @@
       // Update reason
       document.getElementById('reasonText').textContent = result.reason;
       
+      // Stop any playing speech when new result comes
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        document.getElementById('voiceBtn').classList.remove('playing');
+      }
+      
       // Show result section
       document.getElementById('resultSection').classList.add('active');
       
       // Scroll to result
       document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Text-to-Speech for reading the reason
+    let currentUtterance = null;
+    
+    function speakReason() {
+      const voiceBtn = document.getElementById('voiceBtn');
+      const reasonText = document.getElementById('reasonText').textContent;
+      
+      // If already speaking, stop it
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        voiceBtn.classList.remove('playing');
+        return;
+      }
+      
+      // Check if there's text to speak
+      if (!reasonText || reasonText === 'বিশ্লেষণ লোড হচ্ছে...') {
+        return;
+      }
+      
+      // Create utterance
+      currentUtterance = new SpeechSynthesisUtterance(reasonText);
+      
+      // Try to find Bengali voice, fallback to default
+      const voices = window.speechSynthesis.getVoices();
+      const bengaliVoice = voices.find(v => v.lang.includes('bn') || v.lang.includes('hi'));
+      if (bengaliVoice) {
+        currentUtterance.voice = bengaliVoice;
+      }
+      
+      currentUtterance.lang = 'bn-BD'; // Bengali (Bangladesh)
+      currentUtterance.rate = 0.9;
+      currentUtterance.pitch = 1;
+      
+      // Events
+      currentUtterance.onstart = () => {
+        voiceBtn.classList.add('playing');
+      };
+      
+      currentUtterance.onend = () => {
+        voiceBtn.classList.remove('playing');
+      };
+      
+      currentUtterance.onerror = () => {
+        voiceBtn.classList.remove('playing');
+      };
+      
+      // Speak
+      window.speechSynthesis.speak(currentUtterance);
+    }
+    
+    // Load voices (needed for some browsers)
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
     }
   </script>
 
