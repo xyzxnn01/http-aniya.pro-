@@ -306,26 +306,6 @@
       color: #ef4444;
     }
 
-    /* Percentage Display */
-    .percentage-display {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .percentage-value {
-      font-size: 3rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #f472b6, #ec4899);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .percentage-label {
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
-    }
-
     /* Reason Section */
     .reason-section {
       background: rgba(0,0,0,0.3);
@@ -1119,9 +1099,6 @@
       // Update direction text
       document.getElementById('directionText').textContent = 'ERROR';
       document.getElementById('timeframeText').textContent = 'ট্রেডিং চার্ট নয়';
-      
-      // Update percentage to show error
-      document.getElementById('percentageValue').textContent = '—';
       
       // Update reason with AI's error message
       document.getElementById('reasonText').textContent = errorMessage;
