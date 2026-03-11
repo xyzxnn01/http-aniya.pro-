@@ -1017,7 +1017,8 @@
             session_token: sessionToken,
             image: uploadedImageBase64,
             time: selectedTime,
-            language: userLanguage
+            language: userLanguage,
+            timezone_offset: new Date().getTimezoneOffset()
           })
         });
 
