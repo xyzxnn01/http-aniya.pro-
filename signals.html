@@ -540,6 +540,157 @@
       margin-top: 0.25rem;
     }
 
+    /* Signal Limit Bar */
+    .signal-limit-bar {
+      background: linear-gradient(135deg, rgba(26, 15, 53, 0.9), rgba(10, 5, 32, 0.95));
+      border: 1px solid rgba(244, 114, 182, 0.2);
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .signal-limit-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .signal-limit-icon {
+      width: 32px;
+      height: 32px;
+      color: #f472b6;
+    }
+
+    .signal-limit-text {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .signal-limit-text span {
+      color: #f472b6;
+      font-size: 1.1rem;
+    }
+
+    .signal-limit-sub {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .signal-progress-wrap {
+      flex: 1;
+      min-width: 120px;
+      max-width: 200px;
+    }
+
+    .signal-progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .signal-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #ec4899, #8b5cf6);
+      transition: width 0.5s ease;
+    }
+
+    .signal-progress-fill.low {
+      background: linear-gradient(90deg, #ef4444, #f97316);
+    }
+
+    .signal-progress-fill.empty {
+      background: #ef4444;
+    }
+
+    /* Countdown Timer */
+    .signal-countdown {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 0.75rem;
+      padding: 0.5rem 1rem;
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .signal-countdown.active {
+      display: flex;
+    }
+
+    .signal-countdown svg {
+      width: 16px;
+      height: 16px;
+      color: #ef4444;
+    }
+
+    .countdown-time {
+      color: #ef4444;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    /* Signal Limit Popup */
+    .signal-limit-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 5, 32, 0.95);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .signal-limit-popup-overlay.active {
+      display: flex;
+    }
+
+    .signal-limit-popup {
+      background: linear-gradient(135deg, rgba(26, 15, 53, 0.98), rgba(10, 5, 32, 0.99));
+      border-radius: 1.5rem;
+      border: 2px solid rgba(244, 114, 182, 0.5);
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeInFromBottom 0.4s ease;
+    }
+
+    .signal-limit-popup h2 {
+      color: #f472b6;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .signal-limit-popup p {
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .popup-countdown {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f472b6;
+      margin-bottom: 1.5rem;
+      font-family: monospace;
+    }
+
     /* Responsive */
     @media (max-width: 640px) {
       .signal-header h1 {
@@ -575,10 +726,34 @@
         min-width: 100px;
         padding: 0.5rem 0.75rem;
       }
+
+      .signal-limit-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .signal-progress-wrap {
+        max-width: 100%;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Signal Limit Popup -->
+  <div class="signal-limit-popup-overlay" id="signalLimitPopup">
+    <div class="signal-limit-popup">
+      <svg style="width:64px;height:64px;color:#f472b6;margin-bottom:1rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <h2>সিগনাল লিমিট শেষ!</h2>
+      <p>আপনার ১০টি সিগনাল শেষ হয়ে গেছে। পরবর্তী রিসেটের জন্য অপেক্ষা করুন।</p>
+      <div class="popup-countdown" id="popupCountdown">00:00:00</div>
+      <button class="close-popup-btn" onclick="closeSignalLimitPopup()" style="background: linear-gradient(135deg, #ec4899, #db2777); border: none;">ঠিক আছে</button>
+    </div>
+  </div>
 
   <!-- Balance Zero Popup -->
   <div class="balance-popup-overlay" id="balancePopup">
@@ -658,6 +833,31 @@
         <p>Upload your chart screenshot and let Aniya AI predict the next candle</p>
       </div>
 
+      <!-- Signal Limit Bar -->
+      <div class="signal-limit-bar" id="signalLimitBar">
+        <div class="signal-limit-info">
+          <svg class="signal-limit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <div>
+            <div class="signal-limit-text">সিগনাল বাকি: <span id="signalsRemaining">10</span>/<span id="signalsTotal">10</span></div>
+            <div class="signal-limit-sub">প্রতি ৬ ঘণ্টায় ১০টি সিগনাল</div>
+          </div>
+        </div>
+        <div class="signal-progress-wrap">
+          <div class="signal-progress-bar">
+            <div class="signal-progress-fill" id="signalProgressFill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="signal-countdown" id="signalCountdown">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          রিসেট: <span class="countdown-time" id="countdownTime">00:00:00</span>
+        </div>
+      </div>
+
       <!-- Stats Bar -->
       <div class="stats-bar">
         <div class="stat-item">
@@ -666,7 +866,7 @@
         </div>
         <div class="stat-item">
           <div class="stat-value" id="signalCount">0</div>
-          <div class="stat-label">Signals Today</div>
+          <div class="stat-label">এই সেশনে নেওয়া</div>
         </div>
         <div class="stat-item">
           <div class="stat-value" id="accuracyRate">85%</div>
@@ -782,6 +982,10 @@
     let uploadedImageBase64 = null;
     let accountId = '';
     let sessionToken = '';
+    let signalsRemaining = 10;
+    let signalsLimit = 10;
+    let signalsResetAt = '';
+    let countdownInterval = null;
 
     // Language mapping by country
     const countryLanguages = {
@@ -855,6 +1059,14 @@
           // Set language based on country
           if (countryLanguages[userCountry]) {
             userLanguage = countryLanguages[userCountry].lang;
+          }
+
+          // Signal limit info
+          if (data.user.signals_remaining !== undefined) {
+            signalsRemaining = data.user.signals_remaining;
+            signalsLimit = data.user.signals_limit || 10;
+            signalsResetAt = data.user.signals_reset_at || '';
+            updateSignalLimitUI();
           }
 
           // Check if balance is zero (skip if honor_active)
@@ -993,6 +1205,12 @@
         return;
       }
 
+      // Check signal limit
+      if (signalsRemaining <= 0) {
+        showSignalLimitPopup();
+        return;
+      }
+
       // Check balance again (skip if honor_active)
       if (userBalance <= 0 && !isHonorActive) {
         showBalancePopup();
@@ -1025,6 +1243,14 @@
         const data = await response.json();
         
         if (!data.success) {
+          if (data.signal_limit) {
+            // Signal limit reached
+            if (data.signals_reset_at) signalsResetAt = data.signals_reset_at;
+            signalsRemaining = 0;
+            updateSignalLimitUI();
+            showSignalLimitPopup();
+            return;
+          }
           if (data.balance_zero) {
             showBalancePopup();
             return;
@@ -1035,6 +1261,13 @@
             return;
           }
           throw new Error(data.message || 'Analysis failed');
+        }
+
+        // Update signal limit from server response
+        if (data.signals_remaining !== undefined) {
+          signalsRemaining = data.signals_remaining;
+          signalsResetAt = data.signals_reset_at || '';
+          updateSignalLimitUI();
         }
 
         const result = data.result;
@@ -1178,6 +1411,89 @@
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
       };
+    }
+
+    // ==============================
+    // Signal Limit System
+    // ==============================
+
+    function updateSignalLimitUI() {
+      const remainEl = document.getElementById('signalsRemaining');
+      const totalEl = document.getElementById('signalsTotal');
+      const progressFill = document.getElementById('signalProgressFill');
+      const countdownEl = document.getElementById('signalCountdown');
+      const analyzeBtn = document.getElementById('analyzeBtn');
+
+      remainEl.textContent = signalsRemaining;
+      totalEl.textContent = signalsLimit;
+
+      const pct = (signalsRemaining / signalsLimit) * 100;
+      progressFill.style.width = pct + '%';
+      progressFill.className = 'signal-progress-fill';
+      if (pct <= 0) progressFill.classList.add('empty');
+      else if (pct <= 30) progressFill.classList.add('low');
+
+      if (signalsRemaining <= 0 && signalsResetAt) {
+        countdownEl.classList.add('active');
+        startCountdown();
+        // Disable analyze button
+        if (uploadedImageBase64) {
+          analyzeBtn.disabled = false; // Keep enabled but show popup on click
+        }
+      } else {
+        countdownEl.classList.remove('active');
+        stopCountdown();
+      }
+    }
+
+    function startCountdown() {
+      stopCountdown();
+      updateCountdownDisplay();
+      countdownInterval = setInterval(updateCountdownDisplay, 1000);
+    }
+
+    function stopCountdown() {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+    }
+
+    function updateCountdownDisplay() {
+      if (!signalsResetAt) return;
+
+      const resetTime = new Date(signalsResetAt).getTime();
+      const now = Date.now();
+      const diff = resetTime - now;
+
+      if (diff <= 0) {
+        // Timer expired — reset signals
+        signalsRemaining = signalsLimit;
+        signalsResetAt = '';
+        updateSignalLimitUI();
+        stopCountdown();
+        return;
+      }
+
+      const hours = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      const timeStr = String(hours).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+      const countdownTime = document.getElementById('countdownTime');
+      if (countdownTime) countdownTime.textContent = timeStr;
+
+      const popupCountdown = document.getElementById('popupCountdown');
+      if (popupCountdown) popupCountdown.textContent = timeStr;
+    }
+
+    function showSignalLimitPopup() {
+      document.getElementById('signalLimitPopup').classList.add('active');
+      updateCountdownDisplay();
+    }
+
+    function closeSignalLimitPopup() {
+      document.getElementById('signalLimitPopup').classList.remove('active');
     }
   </script>
 
