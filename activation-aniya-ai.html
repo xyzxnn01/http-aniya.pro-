@@ -266,14 +266,20 @@
       statusEl.style.display = 'none';
 
       try {
+        // Add timeout — don't wait forever if server/Telegram hangs
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout
+        
         const res = await fetch(API_BASE + '/activate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             account_id: accountId,
             telegram_username: telegramUsername
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         const data = await res.json();
 
@@ -294,7 +300,11 @@
           submitText.textContent = 'Submit for Activation';
         }
       } catch (err) {
-        showStatus('Server error. Please try again later.', 'error');
+        if (err.name === 'AbortError') {
+          showStatus('Server is taking too long. Please refresh the page and try again.', 'error');
+        } else {
+          showStatus('Connection error. Please check your internet and try again.', 'error');
+        }
         submitText.textContent = 'Submit for Activation';
       } finally {
         submitSpinner.style.display = 'none';
