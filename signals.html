@@ -1069,7 +1069,13 @@
       
       // Update direction text
       document.getElementById('directionText').textContent = isUp ? 'UP' : 'DOWN';
-      document.getElementById('timeframeText').textContent = 'Next ' + timeLabel;
+      
+      // Show trade time if available from server
+      if (result.trade_start && result.trade_end) {
+        document.getElementById('timeframeText').textContent = '⏰ ' + result.trade_start + ' - ' + result.trade_end;
+      } else {
+        document.getElementById('timeframeText').textContent = 'Next ' + timeLabel;
+      }
       
       // Update reason
       document.getElementById('reasonText').textContent = result.reason;
